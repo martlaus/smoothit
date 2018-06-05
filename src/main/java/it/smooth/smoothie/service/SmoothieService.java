@@ -20,4 +20,7 @@ public class SmoothieService {
   }
 
 
+  public Smoothie create(Smoothie smoothie) {
+    return smoothieRepository.save(smoothie);
+  }
 }

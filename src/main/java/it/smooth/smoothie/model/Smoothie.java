@@ -32,5 +32,5 @@ public class Smoothie {
     name = "smoothie_components",
     joinColumns = @JoinColumn(name = "smoothie_id", referencedColumnName = "id"),
     inverseJoinColumns = @JoinColumn(name = "component_id", referencedColumnName = "id"))
-  private List<Component> projects;
+  private List<Component> components;
 }

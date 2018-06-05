@@ -6,10 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.SortDefault;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/smoothies")
@@ -23,6 +20,13 @@ public class SmoothieController {
   public Iterable<Smoothie> findAll(
     @SortDefault(sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
     return smoothieService.findAll(pageable);
+  }
+
+  @PostMapping
+  @CrossOrigin
+  public Smoothie create(
+    @RequestBody Smoothie smoothie) {
+    return smoothieService.create(smoothie);
   }
 
 }
