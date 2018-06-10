@@ -4,6 +4,12 @@ server:
     port: 8080
 
 spring:
+  http.multipart.enabled: false
+  servlet:
+    multipart:
+      max-file-size: 128KB
+      max-request-size: 128KB
+
   jpa:
     hibernate.ddl-auto: create #update - for prod
     properties.hibernate.temp.use_jdbc_metadata_defaults: false
