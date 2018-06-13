@@ -27,6 +27,9 @@ public class Smoothie {
 
   private Long weight;
 
+  @Lob
+  private String file;
+
   @ManyToMany
   @JoinTable(
     name = "smoothie_components",

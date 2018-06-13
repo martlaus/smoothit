@@ -5,6 +5,7 @@ import lombok.Data;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.validation.constraints.NotNull;
 
 @Entity
@@ -28,4 +29,7 @@ public class Component {
 
   @NotNull
   private Long weight;
+
+  @Lob
+  private String file;
 }

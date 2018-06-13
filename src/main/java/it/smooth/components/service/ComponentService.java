@@ -19,7 +19,6 @@ public class ComponentService {
     return componentRepository.findAll(pageable);
   }
 
-
   public Iterable<Component> search(Pageable pageable, String term) {
     return componentRepository.findByNameContains(term, pageable);
   }
