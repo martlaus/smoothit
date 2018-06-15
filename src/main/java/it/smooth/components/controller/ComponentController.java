@@ -7,6 +7,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.SortDefault;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/components")
@@ -35,6 +39,22 @@ public class ComponentController {
   public Component create(
     @RequestBody Component component) {
     return componentService.create(component);
+  }
+
+  @PostMapping(value = "/{id}/file")
+  @CrossOrigin
+  public Component addFile(@PathVariable Long id, @RequestParam("file") MultipartFile file) {
+    Optional<Component> componentOp = componentService.findById(id);
+    if (componentOp.isPresent()) {
+      try {
+        Component component = componentOp.get();
+        component.setFile(file.getBytes());
+        return componentService.create(component);
+      } catch (IOException ignored) {
+        System.out.println(ignored.getMessage());
+      }
+    }
+    return null;
   }
 
   @DeleteMapping

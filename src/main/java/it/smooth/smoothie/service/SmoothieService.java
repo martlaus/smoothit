@@ -8,12 +8,18 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Slf4j
 @Service
 @AllArgsConstructor
 public class SmoothieService {
 
   private SmoothieRepository smoothieRepository;
+
+  public Optional<Smoothie> findById(Long id) {
+    return smoothieRepository.findById(id);
+  }
 
   public Page<Smoothie> findAll(Pageable pageable) {
     return smoothieRepository.findAll(pageable);

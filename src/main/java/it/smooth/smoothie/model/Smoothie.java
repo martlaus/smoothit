@@ -28,7 +28,7 @@ public class Smoothie {
   private Long weight;
 
   @Lob
-  private String file;
+  private byte[] file;
 
   @ManyToMany
   @JoinTable(

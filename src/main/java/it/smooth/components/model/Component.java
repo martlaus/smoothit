@@ -31,5 +31,5 @@ public class Component {
   private Long weight;
 
   @Lob
-  private String file;
+  private byte[] file;
 }

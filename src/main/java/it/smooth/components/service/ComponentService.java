@@ -8,6 +8,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Slf4j
 @Service
 @AllArgsConstructor
@@ -15,7 +17,11 @@ public class ComponentService {
 
   private ComponentRepository componentRepository;
 
-  public Page<Component> findAll(Pageable pageable) {
+    public Optional<Component> findById(Long id) {
+        return componentRepository.findById(id);
+    }
+
+    public Page<Component> findAll(Pageable pageable) {
     return componentRepository.findAll(pageable);
   }
 
