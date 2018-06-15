@@ -27,6 +27,12 @@ public class SmoothieService {
 
 
   public Smoothie create(Smoothie smoothie) {
+    Long calories = smoothie.getSmoothieComponents().stream()
+      .map(component -> component.getKcalPerUnit() * component.getAmount())
+      .mapToLong(Long::longValue).sum();
+
+    smoothie.setCalories(calories);
+
     return smoothieRepository.save(smoothie);
   }
 }

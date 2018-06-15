@@ -19,17 +19,22 @@ public class Component {
   private String name;
 
   @NotNull
-  private Long price;
+  private String brand;
 
   @NotNull
-  private String description;
+  private Long kcalPerUnit;
 
   @NotNull
-  private Long calories;
+  private String unit;
 
   @NotNull
-  private Long weight;
+  private Long unitPriceEur;
+
+  @NotNull
+  private String colorHex;
 
   @Lob
   private byte[] file;
+
+  private Long amount;
 }

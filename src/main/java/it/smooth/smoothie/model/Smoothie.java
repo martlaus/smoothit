@@ -18,14 +18,13 @@ public class Smoothie {
   private String name;
 
   @NotNull
-  private Long price;
-
-  @NotNull
   private String description;
 
+  @NotNull
   private Long calories;
 
-  private Long weight;
+  @NotNull
+  private String instructions;
 
   @Lob
   private byte[] file;
@@ -35,5 +34,5 @@ public class Smoothie {
     name = "smoothie_components",
     joinColumns = @JoinColumn(name = "smoothie_id", referencedColumnName = "id"),
     inverseJoinColumns = @JoinColumn(name = "component_id", referencedColumnName = "id"))
-  private List<Component> components;
+  private List<Component> smoothieComponents;
 }
