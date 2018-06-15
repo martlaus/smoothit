@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.SortDefault;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -13,7 +14,7 @@ import java.io.IOException;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/components")
+@RequestMapping(path = "/components", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 @RequiredArgsConstructor
 public class ComponentController {
 
@@ -50,7 +51,8 @@ public class ComponentController {
         Component component = componentOp.get();
         component.setFile(file.getBytes());
         return componentService.create(component);
-      } catch (IOException ignored) {
+      }
+      catch (IOException ignored) {
         System.out.println(ignored.getMessage());
       }
     }
