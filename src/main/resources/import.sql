@@ -22,6 +22,6 @@ VALUES (1016, 'Apelsin Valencia', 'Hispaania', 470, 'kg', 0.89, '#ffa500');
 insert into component (id, name, brand, kcal_per_unit, unit, unit_price_eur, color_hex) VALUES (1017, 'Õunamahl', 'Cappy', 450, 'kg', 1.39, '#ddad76');
 insert into component (id, name, brand, kcal_per_unit, unit, unit_price_eur, color_hex) VALUES (1018, 'Õunamahl', 'Aura', 470, 'kg', 0.99, '#ddad76');
 
-insert into smoothie (id, calories, description, name, instructions) values (1001, 1254, 'Wake up smoothie', 'Pick me up!', 'Put everything in a blender');
+insert into smoothie (id, calories, description, name, instructions) values (10001, 1254, 'Wake up smoothie', 'Pick me up!', 'Put everything in a blender');
 
-insert into smoothie_components (smoothie_id, component_id) VALUES (1001, 1001);
+insert into smoothie_component (id, smoothie_id, component_id, amount) VALUES (10000, 10001, 1001, 5);

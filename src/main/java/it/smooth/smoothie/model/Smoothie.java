@@ -1,15 +1,19 @@
 package it.smooth.smoothie.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.swagger.annotations.ApiModelProperty;
 import it.smooth.components.model.Component;
 import lombok.Data;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.List;
+import java.io.Serializable;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 @Data
-public class Smoothie {
+public class Smoothie implements Serializable {
   @Id
   @GeneratedValue
   private Long id;
@@ -29,10 +33,25 @@ public class Smoothie {
   @Lob
   private byte[] file;
 
-  @ManyToMany
-  @JoinTable(
-    name = "smoothie_components",
-    joinColumns = @JoinColumn(name = "smoothie_id", referencedColumnName = "id"),
-    inverseJoinColumns = @JoinColumn(name = "component_id", referencedColumnName = "id"))
-  private List<Component> smoothieComponents;
+
+  @ApiModelProperty(hidden = true)
+  @JsonIgnore
+  @OneToMany(mappedBy = "smoothie", cascade = CascadeType.PERSIST)
+  private Set<SmoothieComponent> smoothieComponents;
+
+  @Transient
+  private Set<Component> components;
+
+  public Set<Component> getComponents() {
+    if (smoothieComponents != null && !smoothieComponents.isEmpty()) {
+      return smoothieComponents.stream().map(smoothieComponent -> {
+        Component component = smoothieComponent.getComponent();
+        component.setAmount(smoothieComponent.getAmount());
+        return component;
+      }).collect(Collectors.toSet());
+    }
+    else {
+      return components;
+    }
+  }
 }
