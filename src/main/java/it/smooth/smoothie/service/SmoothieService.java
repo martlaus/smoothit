@@ -36,7 +36,11 @@ public class SmoothieService {
 
   public Smoothie create(Smoothie smoothie) {
     if (smoothie != null && smoothie.getId() != null) {
-      Smoothie smoothie1 = smoothieRepository.findById(smoothie.getId()).get();
+      Optional<Smoothie> byId = smoothieRepository.findById(smoothie.getId());
+      if (!byId.isPresent()) {
+        throw new RuntimeException("No smoothie with this id found");
+      }
+      Smoothie smoothie1 = byId.get();
       if (smoothie1.getSmoothieComponents() != null && !smoothie1.getSmoothieComponents().isEmpty()) {
         smoothieComponentRepository.deleteAll(smoothie1.getSmoothieComponents());
       }
