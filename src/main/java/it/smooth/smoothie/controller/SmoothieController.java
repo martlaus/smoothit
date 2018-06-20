@@ -49,4 +49,10 @@ public class SmoothieController {
         }
         return null;
     }
+
+  @DeleteMapping(value = "/{id}")
+  @CrossOrigin
+  public void delete(@PathVariable Long id) {
+    smoothieService.delete(id);
+  }
 }

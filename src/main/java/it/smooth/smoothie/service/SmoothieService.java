@@ -75,4 +75,8 @@ public class SmoothieService {
 
     return smoothieRepository.save(smoothie);
   }
+
+  public void delete(Long id) {
+    smoothieRepository.deleteById(id);
+  }
 }
