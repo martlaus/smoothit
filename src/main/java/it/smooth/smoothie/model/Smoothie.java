@@ -21,13 +21,10 @@ public class Smoothie implements Serializable {
   @NotNull
   private String name;
 
-  @NotNull
   private String description;
 
-  @NotNull
   private Long calories;
 
-  @NotNull
   private String instructions;
 
   @Lob
@@ -36,7 +33,7 @@ public class Smoothie implements Serializable {
 
   @ApiModelProperty(hidden = true)
   @JsonIgnore
-  @OneToMany(mappedBy = "smoothie", cascade = CascadeType.PERSIST)
+  @OneToMany(mappedBy = "smoothie", cascade = CascadeType.ALL, orphanRemoval = true)
   private Set<SmoothieComponent> smoothieComponents;
 
   @Transient
