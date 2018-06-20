@@ -4,6 +4,7 @@ import it.smooth.components.model.Component;
 import it.smooth.components.service.ComponentService;
 import it.smooth.smoothie.model.Smoothie;
 import it.smooth.smoothie.model.SmoothieComponent;
+import it.smooth.smoothie.repository.SmoothieComponentRepository;
 import it.smooth.smoothie.repository.SmoothieRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +22,7 @@ import java.util.stream.Collectors;
 public class SmoothieService {
 
   private SmoothieRepository smoothieRepository;
+  private SmoothieComponentRepository smoothieComponentRepository;
   private ComponentService componentService;
 
   public Optional<Smoothie> findById(Long id) {
@@ -33,6 +35,15 @@ public class SmoothieService {
 
 
   public Smoothie create(Smoothie smoothie) {
+    if (smoothie != null && smoothie.getId() != null) {
+      Smoothie smoothie1 = smoothieRepository.findById(smoothie.getId()).get();
+      if (smoothie1.getSmoothieComponents() != null && !smoothie1.getSmoothieComponents().isEmpty()) {
+        smoothieComponentRepository.deleteAll(smoothie1.getSmoothieComponents());
+      }
+      smoothieRepository.deleteById(smoothie1.getId());
+      smoothie.setId(null);
+    }
+
     Long calories = smoothie.getComponents().stream()
       .map(component -> {
         Component dbComponent;

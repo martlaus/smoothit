@@ -33,7 +33,7 @@ public class Smoothie implements Serializable {
 
   @ApiModelProperty(hidden = true)
   @JsonIgnore
-  @OneToMany(mappedBy = "smoothie", cascade = CascadeType.ALL, orphanRemoval = true)
+  @OneToMany(mappedBy = "smoothie", cascade = CascadeType.ALL)
   private Set<SmoothieComponent> smoothieComponents;
 
   @Transient

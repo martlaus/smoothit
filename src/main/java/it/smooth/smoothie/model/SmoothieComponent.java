@@ -12,11 +12,11 @@ public class SmoothieComponent implements Serializable {
   @GeneratedValue
   private Long id;
 
-  @ManyToOne(cascade = CascadeType.ALL)
+  @ManyToOne(cascade = CascadeType.PERSIST)
   @JoinColumn(name = "smoothie_id", referencedColumnName = "id")
   private Smoothie smoothie;
 
-  @ManyToOne(cascade = CascadeType.ALL)
+  @ManyToOne(cascade = CascadeType.PERSIST)
   @JoinColumn(name = "component_id", referencedColumnName = "id")
   private Component component;
   private Long amount;
