@@ -14,11 +14,13 @@ import java.util.Optional;
 @Service
 @AllArgsConstructor
 public class ComponentService {
-
   private ComponentRepository componentRepository;
 
     public Optional<Component> findById(Long id) {
+      if (id != null) {
         return componentRepository.findById(id);
+      }
+      return Optional.empty();
     }
 
     public Page<Component> findAll(Pageable pageable) {

@@ -5,6 +5,9 @@ import it.smooth.components.model.Component;
 import javax.persistence.*;
 import java.io.Serializable;
 
+import static javax.persistence.CascadeType.MERGE;
+import static javax.persistence.CascadeType.PERSIST;
+
 @Entity
 public class SmoothieComponent implements Serializable {
 
@@ -12,13 +15,14 @@ public class SmoothieComponent implements Serializable {
   @GeneratedValue
   private Long id;
 
-  @ManyToOne(cascade = CascadeType.PERSIST)
+  @ManyToOne(cascade = PERSIST)
   @JoinColumn(name = "smoothie_id", referencedColumnName = "id")
   private Smoothie smoothie;
 
-  @ManyToOne(cascade = CascadeType.PERSIST)
+  @ManyToOne(cascade = {MERGE, PERSIST})
   @JoinColumn(name = "component_id", referencedColumnName = "id")
   private Component component;
+
   private Long amount;
 
   public SmoothieComponent() {

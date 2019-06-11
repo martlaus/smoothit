@@ -4,7 +4,6 @@ import it.smooth.components.model.Component;
 import it.smooth.components.service.ComponentService;
 import it.smooth.smoothie.model.Smoothie;
 import it.smooth.smoothie.model.SmoothieComponent;
-import it.smooth.smoothie.repository.SmoothieComponentRepository;
 import it.smooth.smoothie.repository.SmoothieRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,15 +13,14 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toSet;
 
 @Slf4j
 @Service
 @AllArgsConstructor
 public class SmoothieService {
-
   private SmoothieRepository smoothieRepository;
-  private SmoothieComponentRepository smoothieComponentRepository;
   private ComponentService componentService;
 
   public Optional<Smoothie> findById(Long id) {
@@ -33,51 +31,30 @@ public class SmoothieService {
     return smoothieRepository.findAll(pageable);
   }
 
-
   public Smoothie create(Smoothie smoothie) {
-    if (smoothie != null && smoothie.getId() != null) {
-      Optional<Smoothie> byId = smoothieRepository.findById(smoothie.getId());
-      if (!byId.isPresent()) {
-        throw new RuntimeException("No smoothie with this id found");
-      }
-      Smoothie smoothie1 = byId.get();
-      if (smoothie1.getSmoothieComponents() != null && !smoothie1.getSmoothieComponents().isEmpty()) {
-        smoothieComponentRepository.deleteAll(smoothie1.getSmoothieComponents());
-      }
-      smoothieRepository.deleteById(smoothie1.getId());
-      smoothie.setId(null);
-    }
+    Set<SmoothieComponent> smoothieComponents = getSmoothieComponents(smoothie);
 
-    Long calories = smoothie.getComponents().stream()
-      .map(component -> {
-        Component dbComponent;
-        if (component.getId() == null) {
-          dbComponent = componentService.create(component);
-        }
-        else {
-          dbComponent = componentService.findById(component.getId()).get();
-        }
-
-        return dbComponent.getKcalPerUnit() * component.getAmount();
-      })
-      .mapToLong(Long::longValue).sum();
-
-    Set<SmoothieComponent> smoothieComponents = smoothie.getComponents().stream()
-      .map(component -> {
-          Component dbComponent = componentService.findById(component.getId()).get();
-
-          return SmoothieComponent.newBuilder()
-            .component(dbComponent)
-            .smoothie(smoothie)
-            .amount(component.getAmount())
-            .build();
-        }
-      ).collect(Collectors.toSet());
-
-    smoothie.setCalories(calories);
     smoothie.setSmoothieComponents(smoothieComponents);
 
     return smoothieRepository.save(smoothie);
+  }
+
+  private Set<SmoothieComponent> getSmoothieComponents(Smoothie smoothie) {
+    return smoothie.getComponents().stream()
+            .map(component -> {
+                      Optional<Component> byId = componentService.findById(component.getId());
+                      Component dbComponent = null;
+                      if (byId.isPresent()) {
+                        dbComponent = byId.get();
+                      }
+
+                      return SmoothieComponent.newBuilder()
+                              .component(dbComponent != null ? dbComponent : component)
+                              .smoothie(smoothie)
+                              .amount(Optional.ofNullable(component.getAmount()).orElse(0L))
+                              .build();
+                    }
+            ).collect(toSet());
   }
 
   public void delete(Long id) {

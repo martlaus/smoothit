@@ -8,6 +8,7 @@ import lombok.Data;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -33,7 +34,7 @@ public class Smoothie implements Serializable {
 
   @ApiModelProperty(hidden = true)
   @JsonIgnore
-  @OneToMany(mappedBy = "smoothie", cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "smoothie", cascade = CascadeType.ALL, orphanRemoval = true)
   private Set<SmoothieComponent> smoothieComponents;
 
   @Transient
@@ -46,9 +47,14 @@ public class Smoothie implements Serializable {
         component.setAmount(smoothieComponent.getAmount());
         return component;
       }).collect(Collectors.toSet());
-    }
-    else {
+    } else {
       return components;
     }
+  }
+
+  public Long getCalories() {
+    return getComponents().stream()
+            .map(c -> c.getKcalPerUnit() * Optional.ofNullable(c.getAmount()).orElse(0L))
+            .mapToLong(Long::longValue).sum();
   }
 }
