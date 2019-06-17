@@ -12,6 +12,8 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static java.util.Collections.emptySet;
+
 @Entity
 @Data
 public class Smoothie implements Serializable {
@@ -31,14 +33,10 @@ public class Smoothie implements Serializable {
   @Lob
   private byte[] file;
 
-
   @ApiModelProperty(hidden = true)
   @JsonIgnore
   @OneToMany(mappedBy = "smoothie", cascade = CascadeType.ALL, orphanRemoval = true)
   private Set<SmoothieComponent> smoothieComponents;
-
-  @Transient
-  private Set<Component> components;
 
   public Set<Component> getComponents() {
     if (smoothieComponents != null && !smoothieComponents.isEmpty()) {
@@ -47,14 +45,15 @@ public class Smoothie implements Serializable {
         component.setAmount(smoothieComponent.getAmount());
         return component;
       }).collect(Collectors.toSet());
-    } else {
-      return components;
+    }
+    else {
+      return emptySet();
     }
   }
 
   public Long getCalories() {
     return getComponents().stream()
-            .map(c -> c.getKcalPerUnit() * Optional.ofNullable(c.getAmount()).orElse(0L))
-            .mapToLong(Long::longValue).sum();
+      .map(c -> c.getKcalPerUnit() * Optional.ofNullable(c.getAmount()).orElse(0L))
+      .mapToLong(Long::longValue).sum();
   }
 }
