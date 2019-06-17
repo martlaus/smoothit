@@ -41,23 +41,27 @@ public class SmoothieService {
 
   private Set<SmoothieComponent> getSmoothieComponents(Smoothie smoothie) {
     return smoothie.getComponents().stream()
-            .map(component -> {
-                      Optional<Component> byId = componentService.findById(component.getId());
-                      Component dbComponent = null;
-                      if (byId.isPresent()) {
-                        dbComponent = byId.get();
-                      }
+      .map(component -> {
+          Optional<Component> byId = componentService.findById(component.getId());
+          Component dbComponent = null;
+          if (byId.isPresent()) {
+            dbComponent = byId.get();
+          }
 
-                      return SmoothieComponent.newBuilder()
-                              .component(dbComponent != null ? dbComponent : component)
-                              .smoothie(smoothie)
-                              .amount(Optional.ofNullable(component.getAmount()).orElse(0L))
-                              .build();
-                    }
-            ).collect(toSet());
+          return SmoothieComponent.newBuilder()
+            .component(dbComponent != null ? dbComponent : component)
+            .smoothie(smoothie)
+            .amount(Optional.ofNullable(component.getAmount()).orElse(0L))
+            .build();
+        }
+      ).collect(toSet());
   }
 
   public void delete(Long id) {
     smoothieRepository.deleteById(id);
+  }
+
+  public Optional<Smoothie> getOne(Long id) {
+    return smoothieRepository.findById(id);
   }
 }

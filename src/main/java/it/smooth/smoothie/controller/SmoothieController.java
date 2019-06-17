@@ -18,37 +18,44 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class SmoothieController {
 
-    private final SmoothieService smoothieService;
+  private final SmoothieService smoothieService;
 
-    @GetMapping
-    @CrossOrigin
-    public Iterable<Smoothie> findAll(
-            @SortDefault(sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
-        return smoothieService.findAll(pageable);
-    }
+  @GetMapping
+  @CrossOrigin
+  public Iterable<Smoothie> findAll(
+    @SortDefault(sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
+    return smoothieService.findAll(pageable);
+  }
 
-    @PostMapping
-    @CrossOrigin
-    public Smoothie create(
-            @RequestBody Smoothie smoothie) {
+  @GetMapping(value = "/{id}")
+  @CrossOrigin
+  public Smoothie getOne(@PathVariable Long id) {
+    Optional<Smoothie> smoothieOptional = smoothieService.getOne(id);
+    return smoothieOptional.orElseThrow(ResourceNotFoundException::new);
+  }
+
+  @PostMapping
+  @CrossOrigin
+  public Smoothie create(@RequestBody Smoothie smoothie) {
+    return smoothieService.create(smoothie);
+  }
+
+  @PostMapping(value = "/{id}/file")
+  @CrossOrigin
+  public Smoothie addFile(@PathVariable Long id, @RequestParam("file") MultipartFile file) {
+    Optional<Smoothie> smoothieOp = smoothieService.findById(id);
+    if (smoothieOp.isPresent()) {
+      try {
+        Smoothie smoothie = smoothieOp.get();
+        smoothie.setFile(file.getBytes());
         return smoothieService.create(smoothie);
+      }
+      catch (IOException ignored) {
+        System.out.println(ignored.getMessage());
+      }
     }
-
-    @PostMapping(value = "/{id}/file")
-    @CrossOrigin
-    public Smoothie addFile(@PathVariable Long id, @RequestParam("file") MultipartFile file) {
-        Optional<Smoothie> smoothieOp = smoothieService.findById(id);
-        if (smoothieOp.isPresent()) {
-            try {
-                Smoothie smoothie = smoothieOp.get();
-                smoothie.setFile(file.getBytes());
-                return smoothieService.create(smoothie);
-            } catch (IOException ignored) {
-                System.out.println(ignored.getMessage());
-            }
-        }
-        return null;
-    }
+    return null;
+  }
 
   @DeleteMapping(value = "/{id}")
   @CrossOrigin
