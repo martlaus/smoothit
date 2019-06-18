@@ -36,6 +36,4 @@ public class Component implements Serializable {
 
   @Lob
   private byte[] file;
-
-  private Long amount;
 }

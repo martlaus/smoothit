@@ -1,8 +1,5 @@
 package it.smooth.smoothie.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import io.swagger.annotations.ApiModelProperty;
-import it.smooth.components.model.Component;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -10,50 +7,33 @@ import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
-
-import static java.util.Collections.emptySet;
 
 @Entity
 @Data
 public class Smoothie implements Serializable {
-  @Id
-  @GeneratedValue
-  private Long id;
+    @Id
+    @GeneratedValue
+    private Long id;
 
-  @NotNull
-  private String name;
+    @NotNull
+    private String name;
 
-  private String description;
+    private String description;
 
-  private Long calories;
+    private Long calories;
 
-  private String instructions;
+    private String instructions;
 
-  @Lob
-  private byte[] file;
+    @Lob
+    private byte[] file;
 
-  @ApiModelProperty(hidden = true)
-  @JsonIgnore
-  @OneToMany(mappedBy = "smoothie", cascade = CascadeType.ALL, orphanRemoval = true)
-  private Set<SmoothieComponent> smoothieComponents;
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "smoothie_id", referencedColumnName = "id")
+    private Set<SmoothieComponent> smoothieComponents;
 
-  public Set<Component> getComponents() {
-    if (smoothieComponents != null && !smoothieComponents.isEmpty()) {
-      return smoothieComponents.stream().map(smoothieComponent -> {
-        Component component = smoothieComponent.getComponent();
-        component.setAmount(smoothieComponent.getAmount());
-        return component;
-      }).collect(Collectors.toSet());
+    public Long getCalories() {
+        return getSmoothieComponents().stream()
+                .map(c -> c.getComponent().getKcalPerUnit() * Optional.ofNullable(c.getAmount()).orElse(0L))
+                .mapToLong(Long::longValue).sum();
     }
-    else {
-      return emptySet();
-    }
-  }
-
-  public Long getCalories() {
-    return getComponents().stream()
-      .map(c -> c.getKcalPerUnit() * Optional.ofNullable(c.getAmount()).orElse(0L))
-      .mapToLong(Long::longValue).sum();
-  }
 }

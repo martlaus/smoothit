@@ -40,6 +40,12 @@ public class SmoothieController {
     return smoothieService.create(smoothie);
   }
 
+  @PutMapping
+  @CrossOrigin
+  public Smoothie update(@RequestBody Smoothie smoothie) {
+    return smoothieService.create(smoothie);
+  }
+
   @PostMapping(value = "/{id}/file")
   @CrossOrigin
   public Smoothie addFile(@PathVariable Long id, @RequestParam("file") MultipartFile file) {
